@@ -1,0 +1,15 @@
+.popup__wrap {
+  display: flex;
+  flex-direction: column;
+  width: 470px;
+  margin-left: 40px;
+  margin-top: calc(50vh - 185px);
+}
+
+@media (max-width: 768px) {
+  .popup__wrap {
+    width: 282px;
+    margin-top: calc(50vh - 185px);
+    margin-left: 0;
+  }
+}

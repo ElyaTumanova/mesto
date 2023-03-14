@@ -1,0 +1,10 @@
+.header {
+  height: 74px;
+  border-bottom: #545454 1px solid;
+}
+
+@media (max-width:768px) {
+  .header {
+    height: 56px;
+  }
+}
