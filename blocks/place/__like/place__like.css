@@ -9,7 +9,3 @@
   cursor: pointer;
   opacity: 60%;
 }
-
-.place__like:active {
- background: url(../../../images/place__like_active.svg) no-repeat center;
-}

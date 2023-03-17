@@ -1,7 +1,7 @@
-.popup__submit-button {
-  box-sizing: border-box;
+.profile-edit-form__submit-button {
   width: 100%;
-  height: 50px;
+  padding-top: 14px;
+  padding-bottom: 18px;
   background-color: #000000;
   color: #fff;
   border-radius: 2px;
@@ -9,19 +9,20 @@
   font-size: 18px;
   line-height: 22px;
   margin-top: 48px;
+  margin-bottom: 34px;
   border: none;
-  align-self: center;
 }
 
-.popup__submit-button:hover {
-  background-color: #313131;
+.profile-edit-form__submit-button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
   cursor: pointer;
 }
 
 @media (max-width: 768px) {
-  .popup__submit-button {
+  .profile-edit-form__submit-button {
     font-size: 14px;
     line-height: 17px;
     margin-top: 45px;
+    margin-bottom: 25px;
   }
 }

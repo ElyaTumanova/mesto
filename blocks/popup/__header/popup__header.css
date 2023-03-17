@@ -5,6 +5,7 @@
   line-height: 29px;
   color: #000000;
   margin-bottom: 54px;
+  margin-top: 37px;
 }
 
 @media (max-width: 768px) {
@@ -12,5 +13,6 @@
     font-size: 18px;
     line-height: 22px;
     margin-bottom: 75px;
+    margin-top: 25px;
   }
 }
