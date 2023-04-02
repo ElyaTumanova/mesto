@@ -25,67 +25,65 @@
         <button class="profile__add-button" type="button"></button>  
       </section>
       <section class="places">
-        <div class="place">
-          <img src="./images/karachaevsk.jpg" alt="Карачаевск" class="place__photo">
-          <div class="place__name-wrap">
-            <h2 class="place__name">Карачаевск</h2>
-             <button class="place__like" type="button"></button>
-          </div>          
-        </div>
-        <div class="place">
-          <img src="./images/elbrus.jpg" alt="Гора Эльбрус" class="place__photo">
-          <div class="place__name-wrap">
-            <h2 class="place__name">Гора Эльбрус</h2>
-             <button class="place__like" type="button"></button>
-          </div>          
-        </div>
-        <div class="place">
-          <img src="./images/dombai.jpg" alt="Домбай" class="place__photo">
-          <div class="place__name-wrap">
-            <h2 class="place__name">Домбай</h2>
-             <button class="place__like" type="button"></button>
-          </div>                   
-        </div>
-        <div class="place">
-          <img src="./images/elbrus.jpg" alt="Гора Эльбрус" class="place__photo">
-          <div class="place__name-wrap">
-            <h2 class="place__name">Гора Эльбрус</h2>
-             <button class="place__like" type="button"></button>
-          </div> 
-        </div>
-        <div class="place">
-          <img src="./images/dombai.jpg" alt="Домбай" class="place__photo">
-          <div class="place__name-wrap">
-            <h2 class="place__name">Домбай</h2>
-             <button class="place__like" type="button"></button>
-          </div>         
-        </div>
-        <div class="place">
-          <img src="./images/karachaevsk.jpg" alt="Карачаевск" class="place__photo">
-          <div class="place__name-wrap">
-            <h2 class="place__name">Карачаево-Черкесия</h2>
-             <button class="place__like" type="button"></button>
-          </div>          
-        </div> 
       </section>
     </main>
     <footer class="footer page__footer">
       <p class="footer__copyright" lang="en">© 2020 Mesto Russia</p>
     </footer>
-    <section class="popup">
+    <section class="popup popup__profile">
       <div class="popup__wrap">
         <div class="popup__close"></div>
       <div class="popup__container">
         <h3 class="popup__header">Редактировать профиль</h3>
-        <form class="profile-form" name="profileForm">
-          <input type="text" name="profileName" placeholder="Введите имя" class="profile-form__input profile-form__input_type_name">
-          <input type="text" name="profileDesccription"placeholder="Введите описание" class="profile-form__input profile-form__input_type_descripton">
-          <button class="profile-form__submit-button">Сохранить</button>
+        <form class="form profile-form" name="profileForm">
+          <input type="text" name="profileName" placeholder="Введите имя" class="form__input profile-form__input profile-form__input_type_name">
+          <input type="text" name="profileDesccription"placeholder="Введите описание" class="form__input profile-form__input profile-form__input_type_descripton">
+          <button class="form__submit-button profile-form__submit-button">Сохранить</button>
         </form>
       </div>  
       </div>
     </section>
+    <section class="popup popup__place">
+      <div class="popup__wrap">
+        <div class="popup__close"></div>
+        <div class="popup__container">
+          <h3 class="popup__header">Новое место</h3>
+          <form class="form place-form" name="placeForm">
+            <input type="text" name="placeName" placeholder="Назавание" class="form__input place-form__input place-form__input_type_name">
+            <input type="text" name="placeImageLink"placeholder="Ссылка на картинку" class="form__input place-form__input place-form__input_type_link">
+            <button class="form__submit-button place-form__submit-button">Сохранить</button>
+          </form>
+        </div>  
+      </div>
+    </section>
   </div>
-  <script src="./scripts/script.js"></script>
+
+  <template id="photoPopup">
+    <section class="popup popup_dark" >
+      <div class="popup__wrap">
+        <div class="popup__close"></div>
+        <div class="photo-popup">
+          <img src="" alt="Ваше фото" class = "photo-popup__photo"> 
+          <p class="photo-popup__description"></p>
+        </div>
+      </div>
+    </section>
+  </template>
+  
+  <template id="placeCard">
+    <div class="place">
+      <button class="place__delete-btn" type="button"></button>
+      <div class="place__photo-wrap">
+        <img alt="Ваше фото" class="place__photo" src = "">
+      </div>
+      <div class="place__name-wrap">
+        <h2 class="place__name"></h2>
+        <button class="place__like" type="button"></button>
+      </div>          
+    </div> 
+  </template>
+
+<script src="./scripts/script.js" type="module"></script>
+  
 </body>
 </html>
