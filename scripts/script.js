@@ -1,7 +1,7 @@
 // start - добавление места
 const newPlaceButton = document.querySelector ('.profile__add-button');
 
-const popupPlace = document.querySelector ('.popup__place');
+const popupPlace = document.querySelector ('.popup_place');
 const poupCloseButtonPlace = popupPlace.querySelector ('.popup__close');
 const popupPlaceForm = popupPlace.querySelector ('.place-form');
 const popupPlaceName = popupPlace.querySelector ('.place-form__input_type_name');
@@ -49,7 +49,7 @@ function addEventListenerForCard (placeSelector) {
 // start - редактирование профиля
 const profileEditButton = document.querySelector ('.profile__edit-button');
 
-const popupProfile = document.querySelector ('.popup__profile');
+const popupProfile = document.querySelector ('.popup_profile');
 const popupProfileForm = popupProfile.querySelector ('.profile-form');
 const poupProfileCloseButton = popupProfile.querySelector ('.popup__close');
 const popupProfileName = popupProfile.querySelector ('.profile-form__input_type_name');
