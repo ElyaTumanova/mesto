@@ -46,9 +46,11 @@ closePopupButtons.forEach ((button) => {
 // создание карточки места
 function createNewPlaceCard (link, name) {
   const placeCardElement = placeCardTemplate.cloneNode(true);
-  placeCardElement.querySelector('.place__photo').src = link;
-  placeCardElement.querySelector('.place__name').textContent = name;
-  placeCardElement.querySelector('.place__photo').alt = name;
+  const placeCardElementPhoto = placeCardElement.querySelector('.place__photo');
+  const placeCardElementName = placeCardElement.querySelector('.place__name');
+  placeCardElementPhoto.src = link;
+  placeCardElementName.textContent = name;
+  placeCardElementPhoto.alt = name;
   addEventListenerForCard (placeCardElement.querySelector('.place'));
   return placeCardElement;
 }
@@ -63,7 +65,7 @@ function addEventListenerForCard (placeSelector) {
     event.preventDefault();
   })
   like.addEventListener ('click',function (event) {
-    placeSelector.querySelector('.place__like').classList.toggle('place__like_active')
+    like.classList.toggle('place__like_active')
     event.preventDefault();
   }) 
   photo.addEventListener ('click',showPhotoPopup);  
@@ -86,6 +88,7 @@ function showPopupPlace () {
 function handlePlaceFormSubmit (evt) {
   evt.preventDefault();
   addNewPlaceCard (popupPlaceLink.value, popupPlaceName.value);
+  evt.target.reset();
   closePopup (evt.target.closest('.popup'));
 }
 
@@ -117,6 +120,7 @@ function showPhotoPopup (evt) {
   const placePhotoLink = placeOpened.querySelector('.place__photo').src;
   popupPhotoDesc.textContent = placeName;
   popupPhotoPhoto.src = placePhotoLink;
+  popupPhotoPhoto.alt = placeName;
   openPopup (popupPhoto);
 }
 //end - вывод попапа фото
