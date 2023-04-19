@@ -1,18 +1,20 @@
 //ПЕРЕМЕННЫЕ
-/// попапы
+// попапы
+const popupOverlay =  Array.from(document.querySelectorAll('.popup'));
 const popupPlace = document.querySelector('.popup_place');
 const popupProfile = document.querySelector('.popup_profile');
 const popupPhoto = document.querySelector('.popup_photo');
 const closePopupButtons = document.querySelectorAll('.popup__close');
 const popupPhotoDesc = popupPhoto.querySelector('.photo-popup__description');
 const popupPhotoPhoto = popupPhoto.querySelector('.photo-popup__photo');
+import {classes,checkValidation, isValid} from './validate.js'
 
 // формы
 const popupPlaceForm = document.forms ['placeForm'];
 const popupPlaceName = popupPlaceForm.querySelector('.place-form__input_type_name');
 const popupPlaceLink = popupPlaceForm.querySelector('.place-form__input_type_link');
 
-const popupProfileForm = document.forms ["profileForm"];
+const popupProfileForm = document.forms ['profileForm'];
 const popupProfileName = popupProfileForm.querySelector('.profile-form__input_type_name');
 const popupProfileDescripton = popupProfileForm.querySelector('.profile-form__input_type_descripton');
 
@@ -30,10 +32,25 @@ const profileDescripton = document.querySelector('.profile__description');
 // попапы
 function openPopup (popup) {
   popup.classList.add ('popup_opened');
+  document.addEventListener('keydown',pressEsc);
 }
 
 function closePopup (popup) {
   popup.classList.remove ('popup_opened');
+  document.removeEventListener('keydown',pressEsc);
+}
+
+function pressEsc (evt) {
+  if (evt.key === 'Escape') {
+    const openPopup = document.querySelector('.popup_opened');
+    closePopup(openPopup);
+  }     
+}
+
+function checkPopup (evt) {
+  if (evt.target.classList.contains('popup')) {
+    closePopup(evt.target)
+  }
 }
 
 // start - добавление event listeners на кнопку закрытия попапа
@@ -81,8 +98,11 @@ initialCards.forEach((i) => {
 // end - вывод карточек по умолчанию
 
 // start - добавление места
-function showPopupPlace () {
+function showPopupPlace (evt) {
+  console.log (classes)
+  console.log (evt)
   openPopup (popupPlace);
+  checkValidation (popupPlace, classes);
 }
 
 function handlePlaceFormSubmit (evt) {
@@ -100,9 +120,13 @@ function addNewPlaceCard (link, name) {
 
 // start - редактирование профиля
 function showPopupProfile () {
-  openPopup (popupProfile);
   popupProfileName.value = profileName.textContent;
   popupProfileDescripton.value = profileDescripton.textContent;
+  openPopup (popupProfile);
+  const inputs = Array.from(popupProfile.querySelectorAll ('.form__input'));
+  const form = popupProfile.querySelector ('.form');
+  inputs.forEach((input)=>{isValid(form,input,classes)});
+  checkValidation (form,classes);
 }
 
 function handleProfileFormSubmit (evt) {
@@ -130,3 +154,5 @@ profileEditButton.addEventListener ('click', showPopupProfile);
 popupProfileForm.addEventListener('submit', handleProfileFormSubmit);
 newPlaceButton.addEventListener ('click',showPopupPlace);
 popupPlaceForm.addEventListener('submit', handlePlaceFormSubmit);
+
+popupOverlay.forEach((popup)=>{popup.addEventListener('click', checkPopup)});
