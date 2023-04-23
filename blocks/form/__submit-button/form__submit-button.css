@@ -10,7 +10,7 @@
   line-height: 22px;
   margin-top: 48px;
   margin-bottom: 34px;
-  border: none;
+  border: solid 1px #000;
 }
 
 .form__submit-button:hover {

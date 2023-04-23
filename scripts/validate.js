@@ -1,6 +1,6 @@
 //start - валидация форм
 
-export const classes = {
+export const validationConfig = {
   formSelector: 'form',
   inputSelector: 'form__input',
   submitButtonSelector: 'form__submit-button',
@@ -9,60 +9,67 @@ export const classes = {
   errorClass: 'form__error-message'
 }
 
-export {checkValidation,isValid};
+export {checkValidation,isValid,removeValidationErrors};
 
-enableValidation (classes);
+enableValidation (validationConfig);
 
-function enableValidation (classes) {
+function enableValidation (validationConfig) {
   const allForms = Array.from(document.forms);
-  const allFormsInputs = Array.from(document.querySelectorAll(`.${classes.inputSelector}`));
-  setEventListener (allForms,allFormsInputs,classes)
+  const allFormsInputs = Array.from(document.querySelectorAll(`.${validationConfig.inputSelector}`));
+  setEventListener (allForms,allFormsInputs,validationConfig)
 }
 
-function setEventListener (allForms,allFormsInputs,classes) {
-  allForms.forEach ((form)=>{form.addEventListener ('input', () => {checkValidation(form,classes)})});
+function setEventListener (allForms,allFormsInputs,validationConfig) {
+  allForms.forEach ((form)=>{form.addEventListener ('input', () => {checkValidation(form,validationConfig)})});
 
   allFormsInputs.forEach(function (input) {
-    const form = input.closest(`.${classes.formSelector}`);
-    input.addEventListener('input', () => {isValid(form,input,classes)});
+    const form = input.closest(`.${validationConfig.formSelector}`);
+    input.addEventListener('input', () => {isValid(form,input,validationConfig)});
   });
 }
 
-function checkValidation (form,classes) {
-  const formInputs = Array.from(form.querySelectorAll(`.${classes.inputSelector}`));
-  const formButton = form.querySelector(`.${classes.submitButtonSelector}`);
+function checkValidation (form,validationConfig) {
+  const formInputs = Array.from(form.querySelectorAll(`.${validationConfig.inputSelector}`));
+  const formButton = form.querySelector(`.${validationConfig.submitButtonSelector}`);
   const check = formInputs.some(function (input){
     return !input.validity.valid
   });
-  toggleButton (check,formButton,classes)
+  toggleButton (check,formButton,validationConfig)
 }
 
-function toggleButton (check,button,classes) {
+function toggleButton (check,button,validationConfig) {
   if (check) {
-    button.classList.add(`${classes.inactiveButtonClass}`);
+    button.classList.add(`${validationConfig.inactiveButtonClass}`);
+    button.disabled = true;
   } else {
-    button.classList.remove(`${classes.inactiveButtonClass}`);
+    button.classList.remove(`${validationConfig.inactiveButtonClass}`);
+    button.disabled = false;
   }
 }
 
-function isValid (form,input,classes) {
+function isValid (form,input,validationConfig) {
   if (!input.validity.valid) {
     const inputErrorMessage = input.validationMessage;
-    showError (form,input,inputErrorMessage,classes);
+    showError (form,input,inputErrorMessage,validationConfig);
   } else {
-    hideError(form,input,classes);
+    hideError(form,input,validationConfig);
   }
 }
 
-function showError (form,input,message,classes) {
-  input.classList.add(`${classes.inputErrorClass}`);
+function showError (form,input,message,validationConfig) {
+  input.classList.add(`${validationConfig.inputErrorClass}`);
   const errorMessageField = form.querySelector(`.${input.name}-error-message`);
   errorMessageField.textContent = message;
 }
 
-function hideError (form,input,classes) {
-  input.classList.remove(`${classes.inputErrorClass}`);
+function hideError (form,input,validationConfig) {
+  input.classList.remove(`${validationConfig.inputErrorClass}`);
   const errorMessageField = form.querySelector(`.${input.name}-error-message`);
   errorMessageField.textContent = "";
 }
+
+function removeValidationErrors (inputs,form) {
+  inputs.forEach((input)=>{isValid(form,input,validationConfig)});
+}
+
 //end - валидация форм

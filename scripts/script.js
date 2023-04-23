@@ -1,13 +1,18 @@
+//ИМПОРТ
+import {validationConfig,checkValidation, removeValidationErrors} from './validate.js'
+import {initialCards} from './initialCards.js'
+
 //ПЕРЕМЕННЫЕ
 // попапы
 const popupOverlay =  Array.from(document.querySelectorAll('.popup'));
 const popupPlace = document.querySelector('.popup_place');
 const popupProfile = document.querySelector('.popup_profile');
+const inputsPopupProfile = Array.from(popupProfile.querySelectorAll ('.form__input'));
+const formPopupProfile = popupProfile.querySelector ('.form');
 const popupPhoto = document.querySelector('.popup_photo');
 const closePopupButtons = document.querySelectorAll('.popup__close');
 const popupPhotoDesc = popupPhoto.querySelector('.photo-popup__description');
 const popupPhotoPhoto = popupPhoto.querySelector('.photo-popup__photo');
-import {classes,checkValidation, isValid} from './validate.js'
 
 // формы
 const popupPlaceForm = document.forms ['placeForm'];
@@ -47,7 +52,7 @@ function pressEsc (evt) {
   }     
 }
 
-function checkPopup (evt) {
+function closePopupByOvelayClick (evt) {
   if (evt.target.classList.contains('popup')) {
     closePopup(evt.target)
   }
@@ -74,10 +79,10 @@ function createNewPlaceCard (link, name) {
 
 // start - добавление event listeners на карточку места
 function addEventListenerForCard (placeSelector) {
-  const del = placeSelector.querySelector ('.place__delete-btn')
+  const elementDeleteCard = placeSelector.querySelector ('.place__delete-btn')
   const like = placeSelector.querySelector ('.place__like')
   const photo = placeSelector.querySelector ('.place__photo-wrap')
-  del.addEventListener ('click', function (event) {
+  elementDeleteCard.addEventListener ('click', function (event) {
     placeSelector.remove()
     event.preventDefault();
   })
@@ -90,19 +95,16 @@ function addEventListenerForCard (placeSelector) {
 // end - добавление event listeners на карточку места
 
 // start - вывод карточек по умолчанию
-import {initialCards} from './initialCards.js'
-initialCards.forEach((i) => {
-  const placeCardElement = createNewPlaceCard(i.link, i.name);
+initialCards.forEach((cardData) => {
+  const placeCardElement = createNewPlaceCard(cardData.link, cardData.name);
   placeCards.append(placeCardElement);  
 });
 // end - вывод карточек по умолчанию
 
 // start - добавление места
-function showPopupPlace (evt) {
-  console.log (classes)
-  console.log (evt)
+function showPopupPlace () {
   openPopup (popupPlace);
-  checkValidation (popupPlace, classes);
+  checkValidation (popupPlace, validationConfig);
 }
 
 function handlePlaceFormSubmit (evt) {
@@ -123,10 +125,8 @@ function showPopupProfile () {
   popupProfileName.value = profileName.textContent;
   popupProfileDescripton.value = profileDescripton.textContent;
   openPopup (popupProfile);
-  const inputs = Array.from(popupProfile.querySelectorAll ('.form__input'));
-  const form = popupProfile.querySelector ('.form');
-  inputs.forEach((input)=>{isValid(form,input,classes)});
-  checkValidation (form,classes);
+  removeValidationErrors (inputsPopupProfile,formPopupProfile);
+  checkValidation (formPopupProfile,validationConfig);
 }
 
 function handleProfileFormSubmit (evt) {
@@ -155,4 +155,4 @@ popupProfileForm.addEventListener('submit', handleProfileFormSubmit);
 newPlaceButton.addEventListener ('click',showPopupPlace);
 popupPlaceForm.addEventListener('submit', handlePlaceFormSubmit);
 
-popupOverlay.forEach((popup)=>{popup.addEventListener('click', checkPopup)});
+popupOverlay.forEach((popup)=>{popup.addEventListener('click', closePopupByOvelayClick)});
