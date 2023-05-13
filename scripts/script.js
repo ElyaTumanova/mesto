@@ -1,18 +1,16 @@
 //ИМПОРТ
-import {validationConfig,checkValidation, removeValidationErrors} from './validate.js'
+import {validationConfig} from './FormValidator.js'
 import {initialCards} from './initialCards.js'
+import {Card} from './Card.js'
+import {openPopup,closePopup,closePopupByOvelayClick} from './utils.js'
+import {FormValidator} from './FormValidator.js'
 
 //ПЕРЕМЕННЫЕ
 // попапы
 const popupOverlay =  Array.from(document.querySelectorAll('.popup'));
 const popupPlace = document.querySelector('.popup_place');
 const popupProfile = document.querySelector('.popup_profile');
-const inputsPopupProfile = Array.from(popupProfile.querySelectorAll ('.form__input'));
-const formPopupProfile = popupProfile.querySelector ('.form');
-const popupPhoto = document.querySelector('.popup_photo');
 const closePopupButtons = document.querySelectorAll('.popup__close');
-const popupPhotoDesc = popupPhoto.querySelector('.photo-popup__description');
-const popupPhotoPhoto = popupPhoto.querySelector('.photo-popup__photo');
 
 // формы
 const popupPlaceForm = document.forms ['placeForm'];
@@ -25,7 +23,6 @@ const popupProfileDescripton = popupProfileForm.querySelector('.profile-form__in
 
 // новое место
 const newPlaceButton = document.querySelector('.profile__add-button');
-const placeCardTemplate = document.querySelector('#placeCard').content;
 const placeCards = document.querySelector('.places');
 
 // профиль
@@ -34,88 +31,48 @@ const profileName = document.querySelector('.profile__name');
 const profileDescripton = document.querySelector('.profile__description');
 
 // ФУНКЦИИ 
-// попапы
-function openPopup (popup) {
-  popup.classList.add ('popup_opened');
-  document.addEventListener('keydown',pressEsc);
-}
 
-function closePopup (popup) {
-  popup.classList.remove ('popup_opened');
-  document.removeEventListener('keydown',pressEsc);
-}
+//валидация
+const popupPlaceFormValid = new FormValidator (validationConfig, popupPlaceForm)
+popupPlaceFormValid.enableValidation();
 
-function pressEsc (evt) {
-  if (evt.key === 'Escape') {
-    const openPopup = document.querySelector('.popup_opened');
-    closePopup(openPopup);
-  }     
-}
+const popupProfileFormValid = new FormValidator (validationConfig, popupProfileForm)
+popupProfileFormValid.enableValidation();
 
-function closePopupByOvelayClick (evt) {
-  if (evt.target.classList.contains('popup')) {
-    closePopup(evt.target)
-  }
-}
+// вывод карточек по умолчанию
+initialCards.forEach((cardData) => {
+  const placeCard = new Card (cardData,'#placeCard');
+  const placeCardElement = placeCard.createNewPlaceCard();
+  placeCards.append(placeCardElement);  
+});
 
-// start - добавление event listeners на кнопку закрытия попапа
+//добавление event listeners на кнопку закрытия попапа
 closePopupButtons.forEach ((button) => {
   const popup = button.closest('.popup');
   button.addEventListener ('click', () => closePopup (popup));
 })
-// end - добавление event listeners на кнопку закрытия попапа
-
-// создание карточки места
-function createNewPlaceCard (link, name) {
-  const placeCardElement = placeCardTemplate.cloneNode(true);
-  const placeCardElementPhoto = placeCardElement.querySelector('.place__photo');
-  const placeCardElementName = placeCardElement.querySelector('.place__name');
-  placeCardElementPhoto.src = link;
-  placeCardElementName.textContent = name;
-  placeCardElementPhoto.alt = name;
-  addEventListenerForCard (placeCardElement.querySelector('.place'));
-  return placeCardElement;
-}
-
-// start - добавление event listeners на карточку места
-function addEventListenerForCard (placeSelector) {
-  const elementDeleteCard = placeSelector.querySelector ('.place__delete-btn')
-  const like = placeSelector.querySelector ('.place__like')
-  const photo = placeSelector.querySelector ('.place__photo-wrap')
-  elementDeleteCard.addEventListener ('click', function (event) {
-    placeSelector.remove()
-    event.preventDefault();
-  })
-  like.addEventListener ('click',function (event) {
-    like.classList.toggle('place__like_active')
-    event.preventDefault();
-  }) 
-  photo.addEventListener ('click',showPhotoPopup);  
-}
-// end - добавление event listeners на карточку места
-
-// start - вывод карточек по умолчанию
-initialCards.forEach((cardData) => {
-  const placeCardElement = createNewPlaceCard(cardData.link, cardData.name);
-  placeCards.append(placeCardElement);  
-});
-// end - вывод карточек по умолчанию
 
 // start - добавление места
 function showPopupPlace () {
   openPopup (popupPlace);
-  checkValidation (popupPlace, validationConfig);
+  const popupPlaceFormValid = new FormValidator (validationConfig, popupPlaceForm)
+  popupPlaceFormValid.checkValidation();
 }
 
 function handlePlaceFormSubmit (evt) {
   evt.preventDefault();
-  addNewPlaceCard (popupPlaceLink.value, popupPlaceName.value);
+  const card = {
+    name: popupPlaceName.value,
+    link: popupPlaceLink.value
+  }
+  addNewPlaceCard (card);
   evt.target.reset();
   closePopup (evt.target.closest('.popup'));
 }
 
-function addNewPlaceCard (link, name) {
-  const placeCardElement = createNewPlaceCard (link, name);
+function addNewPlaceCard (card) {
+  const placeCard = new Card (card,'#placeCard');
+  const placeCardElement = placeCard.createNewPlaceCard();
   placeCards.prepend(placeCardElement);
 }
 // end - добавление места
@@ -125,8 +82,9 @@ function showPopupProfile () {
   popupProfileName.value = profileName.textContent;
   popupProfileDescripton.value = profileDescripton.textContent;
   openPopup (popupProfile);
-  removeValidationErrors (inputsPopupProfile,formPopupProfile);
-  checkValidation (formPopupProfile,validationConfig);
+  const popupProfileFormValid = new FormValidator (validationConfig, popupProfileForm)
+  popupProfileFormValid.removeValidationErrors();
+  popupProfileFormValid.checkValidation();
 }
 
 function handleProfileFormSubmit (evt) {
@@ -137,17 +95,7 @@ function handleProfileFormSubmit (evt) {
 }
 // end - редактирование профиля
 
-//start - вывод попапа фото
-function showPhotoPopup (evt) {
-  const placeOpened = evt.target.closest('.place')
-  const placeName = placeOpened.querySelector('.place__name').textContent;
-  const placePhotoLink = placeOpened.querySelector('.place__photo').src;
-  popupPhotoDesc.textContent = placeName;
-  popupPhotoPhoto.src = placePhotoLink;
-  popupPhotoPhoto.alt = placeName;
-  openPopup (popupPhoto);
-}
-//end - вывод попапа фото
+
 
 //EVENT LISTENERS
 profileEditButton.addEventListener ('click', showPopupProfile);
