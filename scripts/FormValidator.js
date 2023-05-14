@@ -17,11 +17,12 @@ export class FormValidator {
     this._errorClass = validationConfig.errorClass
 
     this._validationForm = validationForm
+
+    this._formInputs = Array.from(this._validationForm.querySelectorAll(`.${validationConfig.inputSelector}`))
   }
 
   enableValidation () {
-    const formInputs = Array.from(this._validationForm.querySelectorAll(`.${validationConfig.inputSelector}`));
-    this._setEventListener (this._validationForm,formInputs)
+    this._setEventListener (this._validationForm,this._formInputs)
   }
 
   _setEventListener (form,formInputs) {
@@ -55,9 +56,8 @@ export class FormValidator {
 
 
   checkValidation () {
-    const formInputs = Array.from(this._validationForm.querySelectorAll(`.${this._inputSelector}`));
     const formButton = this._validationForm.querySelector(`.${this._submitButtonSelector}`);
-    const check = formInputs.some(function (input){
+    const check = this._formInputs.some(function (input){
       return !input.validity.valid
     });
 
@@ -75,7 +75,7 @@ export class FormValidator {
   }
 
   removeValidationErrors () {
-    const inputsPopupProfile = Array.from(this._validationForm.querySelectorAll ('.form__input'));
+    const inputsPopupProfile = Array.from(this._validationForm.querySelectorAll (`.${this._inputSelector}`));
     inputsPopupProfile.forEach((input)=>{this._isValid(this._validationForm,input)});
   }
 }

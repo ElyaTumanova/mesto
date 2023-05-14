@@ -1,21 +1,24 @@
-import {openPopup} from './utils.js'
-
 export class Card {
-  constructor(item, template) {
+  constructor(item, template, showPhotoPopup) {
     this._name = item.name;
     this._link = item.link;
-    this._template = template
+    this._template = template;
+    this._showPhotoPopup = showPhotoPopup;
   }
   // создание карточки места
   createNewPlaceCard() {
     this._element = this._getElement();
-    const placeCardElementPhoto = this._element.querySelector('.place__photo');
-    const placeCardElementName = this._element.querySelector('.place__name');
-    placeCardElementPhoto.src = this._link;
-    placeCardElementName.textContent = this._name;
-    placeCardElementPhoto.alt = this._name;
+    this._placeCard = this._element.querySelector('.place');
+    this._placeCardPhoto = this._element.querySelector('.place__photo');
+    this._placeCardName = this._element.querySelector('.place__name');
+    this._placeCardDeleteBtn = this._placeCard.querySelector ('.place__delete-btn');
+    this._placeCardLikeBtn = this._placeCard.querySelector ('.place__like');
 
-    this._addEventListenerForCard (this._element.querySelector('.place'));
+    this._placeCardPhoto.src = this._link;
+    this._placeCardName.textContent = this._name;
+    this._placeCardPhoto.alt = this._name;
+        
+    this._addEventListenerForCard ();
 
     return this._element;
   }
@@ -30,34 +33,26 @@ export class Card {
   }
 
 // добавление event listeners на карточку места
-_addEventListenerForCard (placeSelector) {
-  const elementDeleteCard = placeSelector.querySelector ('.place__delete-btn')
-  const like = placeSelector.querySelector ('.place__like')
-  const photo = placeSelector.querySelector ('.place__photo-wrap')
-
-  elementDeleteCard.addEventListener ('click', function (event) {
-    placeSelector.remove()
-    event.preventDefault();
+_addEventListenerForCard () {
+  
+  this._placeCardDeleteBtn.addEventListener ('click', () => {
+    this._deleteCard();
   })
 
-  like.addEventListener ('click',function (event) {
-    like.classList.toggle('place__like_active')
-    event.preventDefault();
+  this._placeCardLikeBtn.addEventListener ('click',() => {
+    this._toggleLike();
   }) 
-  photo.addEventListener ('click',this._showPhotoPopup);  
+
+  this._placeCardPhoto.addEventListener ('click', () => {
+    this._showPhotoPopup(this._name, this._link)
+  });  
 }
 
-//вывод попапа фото
-_showPhotoPopup (evt) {
-  const placeOpened = evt.target.closest('.place')
-  const placeName = placeOpened.querySelector('.place__name').textContent;
-  const placePhotoLink = placeOpened.querySelector('.place__photo').src;
-  const popupPhoto = document.querySelector('.popup_photo');
-  const popupPhotoDesc = popupPhoto.querySelector('.photo-popup__description');
-  const popupPhotoPhoto = popupPhoto.querySelector('.photo-popup__photo');
-  popupPhotoDesc.textContent = placeName;
-  popupPhotoPhoto.src = placePhotoLink;
-  popupPhotoPhoto.alt = placeName;
-  openPopup (popupPhoto);
+_deleteCard () {
+  this._placeCard.remove()
+}
+
+_toggleLike () {
+  this._placeCardLikeBtn.classList.toggle('place__like_active')
 }
 }

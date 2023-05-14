@@ -2,7 +2,6 @@
 import {validationConfig} from './FormValidator.js'
 import {initialCards} from './initialCards.js'
 import {Card} from './Card.js'
-import {openPopup,closePopup,closePopupByOvelayClick} from './utils.js'
 import {FormValidator} from './FormValidator.js'
 
 //ПЕРЕМЕННЫЕ
@@ -21,7 +20,7 @@ const popupProfileForm = document.forms ['profileForm'];
 const popupProfileName = popupProfileForm.querySelector('.profile-form__input_type_name');
 const popupProfileDescripton = popupProfileForm.querySelector('.profile-form__input_type_descripton');
 
-// новое место
+// место
 const newPlaceButton = document.querySelector('.profile__add-button');
 const placeCards = document.querySelector('.places');
 
@@ -39,11 +38,16 @@ popupPlaceFormValid.enableValidation();
 const popupProfileFormValid = new FormValidator (validationConfig, popupProfileForm)
 popupProfileFormValid.enableValidation();
 
+//создание карточки
+function createCard (cardData) {
+  const placeCard = new Card (cardData,'#placeCard',showPhotoPopup);
+  const placeCardElement = placeCard.createNewPlaceCard();
+  return placeCardElement;
+}
+
 // вывод карточек по умолчанию
 initialCards.forEach((cardData) => {
-  const placeCard = new Card (cardData,'#placeCard');
-  const placeCardElement = placeCard.createNewPlaceCard();
-  placeCards.append(placeCardElement);  
+  addNewPlaceCard(cardData);
 });
 
 //добавление event listeners на кнопку закрытия попапа
@@ -55,7 +59,6 @@ closePopupButtons.forEach ((button) => {
 // start - добавление места
 function showPopupPlace () {
   openPopup (popupPlace);
-  const popupPlaceFormValid = new FormValidator (validationConfig, popupPlaceForm)
   popupPlaceFormValid.checkValidation();
 }
 
@@ -71,8 +74,7 @@ function handlePlaceFormSubmit (evt) {
 }
 
 function addNewPlaceCard (card) {
-  const placeCard = new Card (card,'#placeCard');
-  const placeCardElement = placeCard.createNewPlaceCard();
+  const placeCardElement = createCard (card);
   placeCards.prepend(placeCardElement);
 }
 // end - добавление места
@@ -82,7 +84,6 @@ function showPopupProfile () {
   popupProfileName.value = profileName.textContent;
   popupProfileDescripton.value = profileDescripton.textContent;
   openPopup (popupProfile);
-  const popupProfileFormValid = new FormValidator (validationConfig, popupProfileForm)
   popupProfileFormValid.removeValidationErrors();
   popupProfileFormValid.checkValidation();
 }
@@ -95,7 +96,40 @@ function handleProfileFormSubmit (evt) {
 }
 // end - редактирование профиля
 
+// попапы
+function openPopup (popup) {
+  popup.classList.add ('popup_opened');
+  document.addEventListener('keydown',pressEsc);
+}
 
+function closePopup (popup) {
+  popup.classList.remove ('popup_opened');
+  document.removeEventListener('keydown',pressEsc);
+}
+
+function pressEsc (evt) {
+  if (evt.key === 'Escape') {
+    const openPopup = document.querySelector('.popup_opened');
+    closePopup(openPopup);
+  }     
+}
+
+function closePopupByOvelayClick (evt) {
+  if (evt.target.classList.contains('popup')) {
+    closePopup(evt.target)
+  }
+}
+
+//вывод попапа фото
+function showPhotoPopup (name, link) {
+  const popupPhoto = document.querySelector('.popup_photo');
+  const popupPhotoDesc = popupPhoto.querySelector('.photo-popup__description');
+  const popupPhotoPhoto = popupPhoto.querySelector('.photo-popup__photo');
+  popupPhotoDesc.textContent = name;
+  popupPhotoPhoto.src = link;
+  popupPhotoPhoto.alt = name;
+  openPopup (popupPhoto);
+}
 
 //EVENT LISTENERS
 profileEditButton.addEventListener ('click', showPopupProfile);
