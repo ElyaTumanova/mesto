@@ -11,6 +11,10 @@ const popupPlace = document.querySelector('.popup_place');
 const popupProfile = document.querySelector('.popup_profile');
 const closePopupButtons = document.querySelectorAll('.popup__close');
 
+const popupPhoto = document.querySelector('.popup_photo');
+const popupPhotoDesc = popupPhoto.querySelector('.photo-popup__description');
+const popupPhotoPhoto = popupPhoto.querySelector('.photo-popup__photo');
+
 // формы
 const popupPlaceForm = document.forms ['placeForm'];
 const popupPlaceName = popupPlaceForm.querySelector('.place-form__input_type_name');
@@ -122,9 +126,6 @@ function closePopupByOvelayClick (evt) {
 
 //вывод попапа фото
 function showPhotoPopup (name, link) {
-  const popupPhoto = document.querySelector('.popup_photo');
-  const popupPhotoDesc = popupPhoto.querySelector('.photo-popup__description');
-  const popupPhotoPhoto = popupPhoto.querySelector('.photo-popup__photo');
   popupPhotoDesc.textContent = name;
   popupPhotoPhoto.src = link;
   popupPhotoPhoto.alt = name;
