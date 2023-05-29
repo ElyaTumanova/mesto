@@ -1,9 +1,9 @@
 export class Card {
-  constructor(item, template, showPhotoPopup) {
+  constructor(item, template, handleCardClick) {
     this._name = item.name;
     this._link = item.link;
     this._template = template;
-    this._showPhotoPopup = showPhotoPopup;
+    this._handleCardClick = handleCardClick;  
   }
   // создание карточки места
   createNewPlaceCard() {
@@ -44,7 +44,7 @@ _addEventListenerForCard () {
   }) 
 
   this._placeCardPhoto.addEventListener ('click', () => {
-    this._showPhotoPopup(this._name, this._link)
+    this._handleCardClick(this._name, this._link)
   });  
 }
 
