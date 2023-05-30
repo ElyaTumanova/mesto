@@ -49,7 +49,8 @@ _addEventListenerForCard () {
 }
 
 _deleteCard () {
-  this._placeCard.remove()
+  this._placeCard.remove();
+  this._placeCard = null;
 }
 
 _toggleLike () {

@@ -1,16 +1,26 @@
 //ИМПОРТ
-import {validationConfig} from './FormValidator.js'
-import {initialCards} from './initialCards.js'
-import {Card} from './Card.js'
-import {FormValidator} from './FormValidator.js'
-import {Section} from './Section.js'
-import {PopupWithImage} from './PopupWithImage.js'
-import {PopupWithForm} from './PopupWithForm.js'
-import {UserInfo} from './UserInfo.js'
+import {initialCards} from '../utils/initialCards.js'
+import {Card} from '../components/Card.js'
+import {FormValidator} from '../components/FormValidator.js'
+import {Section} from '../components/Section.js'
+import {PopupWithImage} from '../components/PopupWithImage.js'
+import {PopupWithForm} from '../components/PopupWithForm.js'
+import {UserInfo} from '../components/UserInfo.js'
 
 import '../pages/index.css'
 
+
+
 //ПЕРЕМЕННЫЕ
+//валидация
+const validationConfig = {
+  formSelector: 'form',
+  inputSelector: 'form__input',
+  submitButtonSelector: 'form__submit-button',
+  inactiveButtonClass: 'form__submit-button_disabled',
+  errorClass: 'form__input_disabled'
+}
+
 // попапы
 const popupPlace = document.querySelector('.popup_place');
 const popupProfile = document.querySelector('.popup_profile');
@@ -18,9 +28,6 @@ const popupPhoto = document.querySelector('.popup_photo');
 
 // формы
 const popupPlaceForm = document.forms ['placeForm'];
-const popupPlaceName = popupPlaceForm.querySelector('.place-form__input_type_name');
-const popupPlaceLink = popupPlaceForm.querySelector('.place-form__input_type_link');
-
 const popupProfileForm = document.forms ['profileForm'];
 const popupProfileName = popupProfileForm.querySelector('.profile-form__input_type_name');
 const popupProfileDescripton = popupProfileForm.querySelector('.profile-form__input_type_descripton');
@@ -44,12 +51,8 @@ const popupProfileFormValid = new FormValidator (validationConfig, popupProfileF
 popupProfileFormValid.enableValidation();
 
 // вывод карточек по умолчанию
-const initialCardsAdd = new Section ({
-  items:initialCards,
-  renderer:createCard,
-},
-placeCards);
-initialCardsAdd.renderItem();
+const newPlaceCard = new Section (createCard,placeCards);
+newPlaceCard.renderItem(initialCards);
 
 //создание карточки
 function createCard (cardData) {
@@ -60,6 +63,7 @@ function createCard (cardData) {
 
 // start - добавление места
 const popupPlaceAdd = new PopupWithForm (popupPlace,handlePlaceFormSubmit);
+popupPlaceAdd.setEventListeners();
 
 function showPopupPlace () {
   popupPlaceAdd.openPopup();
@@ -68,20 +72,14 @@ function showPopupPlace () {
 
 function handlePlaceFormSubmit (evt) {
   evt.preventDefault();
-  const card = [{
-    name: popupPlaceName.value,
-    link: popupPlaceLink.value
-  }]
-  const newPlaceCard = new Section (
-    {items: card,
-    renderer: createCard},
-    placeCards);
-  newPlaceCard.renderItem();
+  const card = popupPlaceAdd.getInputValues();
+  newPlaceCard.renderItem(card);
   popupPlaceAdd.closePopup();
 }
 
 // start - редактирование профиля
 const popupProfileAdd = new PopupWithForm (popupProfile, handleProfileFormSubmit);
+popupProfileAdd.setEventListeners ();
 const userInfo = new UserInfo (profileName,profileDescripton);
 
 function showPopupProfile () {
@@ -95,14 +93,20 @@ function showPopupProfile () {
 
 function handleProfileFormSubmit (evt) {
   evt.preventDefault();
-  userInfo.setUserInfo();
+  const userName = popupProfileName.value;
+  const userDescription = popupProfileDescripton.value;
+  userInfo.setUserInfo(userName,userDescription);
   popupProfileAdd.closePopup();
 }
 // end - редактирование профиля
 
 //вывод попапа фото
+const popupPhotoAdd = new PopupWithImage (popupPhoto);
+
 function showPhotoPopup (name, link) {
-  const popupPhotoAdd = new PopupWithImage (name, link, popupPhoto);
+  popupPhotoAdd.name = name;
+  popupPhotoAdd.link = link;
+  popupPhotoAdd.setEventListeners ();
   popupPhotoAdd.openPopup ();
 }
 
