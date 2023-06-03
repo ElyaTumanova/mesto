@@ -1,19 +1,16 @@
 import {Popup} from './Popup.js'
 export class PopupWithImage extends Popup {
-  constructor (popup,name, link) {
+  constructor (popup) {
     super (popup);
-    this.name = name;
-    this.link = link;
     this._popupPhotoDesc = this._popup.querySelector('.photo-popup__description');
     this._popupPhotoPhoto = this._popup.querySelector('.photo-popup__photo');
   }
 
-  openPopup () {
+  openPopup (name, link) {
     super.openPopup();
-    console.log (this.name);
-    this._popupPhotoDesc.textContent = this.name;
-    this._popupPhotoPhoto.src = this.link;
-    this._popupPhotoPhoto.alt = this._name;
+    this._popupPhotoDesc.textContent = name;
+    this._popupPhotoPhoto.src = link;
+    this._popupPhotoPhoto.alt = name;
   }
 
   closePopup () {
@@ -31,5 +28,4 @@ export class PopupWithImage extends Popup {
   _closePopupByOvelayClick (evt) {
     super._closePopupByOvelayClick(evt);
   }
-
 }

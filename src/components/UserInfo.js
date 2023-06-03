@@ -12,8 +12,8 @@ export class UserInfo {
   return profileUser;
  }
 
- setUserInfo (userName,userDescription) {
-  this._name.textContent = userName;
-  this._description.textContent = userDescription;
+ setUserInfo (data) {
+  this._name.textContent = data.profileName;
+  this._description.textContent = data.profileDesccription;
  }
 }

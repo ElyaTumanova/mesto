@@ -9,8 +9,6 @@ import {UserInfo} from '../components/UserInfo.js'
 
 import '../pages/index.css'
 
-
-
 //ПЕРЕМЕННЫЕ
 //валидация
 const validationConfig = {
@@ -50,13 +48,17 @@ popupPlaceFormValid.enableValidation();
 const popupProfileFormValid = new FormValidator (validationConfig, popupProfileForm)
 popupProfileFormValid.enableValidation();
 
+//создание попапа фото
+const popupPhotoAdd = new PopupWithImage (popupPhoto);
+popupPhotoAdd.setEventListeners ();
+
 // вывод карточек по умолчанию
 const newPlaceCard = new Section (createCard,placeCards);
 newPlaceCard.renderItem(initialCards);
 
 //создание карточки
 function createCard (cardData) {
-  const placeCard = new Card (cardData,'#placeCard',showPhotoPopup);
+  const placeCard = new Card (cardData,'#placeCard', popupPhotoAdd.openPopup.bind(popupPhotoAdd));
   const placeCardElement = placeCard.createNewPlaceCard();
   return placeCardElement;
 }
@@ -70,17 +72,15 @@ function showPopupPlace () {
   popupPlaceFormValid.checkValidation();
 }
 
-function handlePlaceFormSubmit (evt) {
-  evt.preventDefault();
-  const card = popupPlaceAdd.getInputValues();
-  newPlaceCard.renderItem(card);
+function handlePlaceFormSubmit (card) {
+  newPlaceCard.renderItem([card]);
   popupPlaceAdd.closePopup();
 }
 
 // start - редактирование профиля
 const popupProfileAdd = new PopupWithForm (popupProfile, handleProfileFormSubmit);
 popupProfileAdd.setEventListeners ();
-const userInfo = new UserInfo (profileName,profileDescripton);
+const userInfo = new UserInfo (profileName, profileDescripton);
 
 function showPopupProfile () {
   popupProfileAdd.openPopup();
@@ -91,24 +91,11 @@ function showPopupProfile () {
   popupProfileFormValid.checkValidation();
 }
 
-function handleProfileFormSubmit (evt) {
-  evt.preventDefault();
-  const userName = popupProfileName.value;
-  const userDescription = popupProfileDescripton.value;
-  userInfo.setUserInfo(userName,userDescription);
+function handleProfileFormSubmit (data) {
+  userInfo.setUserInfo(data);
   popupProfileAdd.closePopup();
 }
 // end - редактирование профиля
-
-//вывод попапа фото
-const popupPhotoAdd = new PopupWithImage (popupPhoto);
-
-function showPhotoPopup (name, link) {
-  popupPhotoAdd.name = name;
-  popupPhotoAdd.link = link;
-  popupPhotoAdd.setEventListeners ();
-  popupPhotoAdd.openPopup ();
-}
 
 //EVENT LISTENERS
 profileEditButton.addEventListener ('click', showPopupProfile);

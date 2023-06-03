@@ -20,7 +20,10 @@ export class PopupWithForm extends Popup {
 
   setEventListeners () {
     super.setEventListeners();
-    this._popupForm.addEventListener('submit', this._formSubmit);
+    this._popupForm.addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      this._formSubmit(this._getInputValues());
+    });
   }
 
   _handleEscClose (evt) {
@@ -31,13 +34,9 @@ export class PopupWithForm extends Popup {
     super._closePopupByOvelayClick(evt);
   }
 
-  getInputValues () {
-    console.log(this._popupPlaceName)
-    const inputValues = [{
-      name: this._popupPlaceName.value,
-      link: this._popupPlaceLink.value
-    }]
-    
-    return inputValues;
+  _getInputValues () {
+    this._formValues = {};
+    this._popupFormInputs.forEach(input => this._formValues[input.name] = input.value);
+    return this._formValues; 
   }
 }
