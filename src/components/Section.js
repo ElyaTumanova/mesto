@@ -4,9 +4,10 @@ export class Section {
     this._renderer = renderer;
   }
 
-  renderItem (items) {
-    items.forEach ((item) => {
-      const renderedItem = this._renderer(item);
+  renderItem (items, user) {
+    const itemsReversed = items.reverse()
+    itemsReversed.forEach ((item) => {
+      const renderedItem = this._renderer(item,user);
       this.addItem (renderedItem);
     });   
   }

@@ -26,6 +26,10 @@ export class PopupWithForm extends Popup {
     });
   }
 
+  renderLoading (isLoading) {
+    super.renderLoading(isLoading);
+  }
+
   _handleEscClose (evt) {
     super._handleEscClose(evt);    
   }

@@ -13,13 +13,17 @@
     </header>
     <main class="page__content">
       <section class="profile page__profile">
-        <img src="<%=require('./images/profile__avatar.jpg')%>" alt="Аватарка" class="profile__avatar">
+        <div class="profile__avatar-wrap">
+          <img src="" alt="Аватарка" class="profile__avatar">
+          <button class="profile__avatar-edit"></button>
+        </div>
+        
           <div class="profile__info">
             <div class="profile__name-wrap">
-              <h1 class="profile__name">Жак-Ив Кусто</h1>
+              <h1 class="profile__name"></h1>
               <button class="profile__edit-button" type="button"></button>
             </div>
-            <p class="profile__description">Исследователь океана</p>
+            <p class="profile__description"></p>
           </div>
         <button class="profile__add-button" type="button"></button>  
       </section>
@@ -108,6 +112,39 @@
         </div>
       </div>
     </section>
+
+    <section class="popup popup_delete-confirm">
+      <div class="popup__wrap">
+        <div class="popup__close"></div>
+        <div class="popup__container">
+          <h3 class="popup__header">Вы уверены?</h3>
+          <button class="form__submit-button">Сохранить</button>
+        </div>  
+      </div>
+    </section>
+
+    <section class="popup popup_update-avatar">
+      <div class="popup__wrap">
+        <div class="popup__close"></div>
+        <div class="popup__container">
+          <h3 class="popup__header">Обновить аватар</h3>
+          <form class="form avatar-form" name="avatarForm">
+            <div class="form__input-wrap">
+              <input type="url" 
+              name="avatarImageLink"
+              placeholder="Ссылка на аватар" 
+              class="form__input avatar-form__input avatar-form__input_type_link"
+              required
+              novalidate>
+
+              <div class="form__error-message avatarImageLink-error-message"></div>
+            </div>
+            <button class="form__submit-button">Сохранить</button>
+          </form>
+        </div>  
+      </div>
+    </section>
+
   
   <template id="placeCard">
     <div class="place">
@@ -117,7 +154,10 @@
       </div>
       <div class="place__name-wrap">
         <h2 class="place__name"></h2>
-        <button class="place__like" type="button"></button>
+        <div class="place__like-wrap">
+          <button class="place__like" type="button"></button>
+          <span class="place__like-count">0</span>
+        </div>
       </div>          
     </div> 
   </template>
