@@ -1,4 +1,15 @@
 //ИМПОРТ
+
+import {
+  validationConfig, 
+  popupPlace, popupProfile, popupPhoto, popupDelete, popupAvatarEdit,
+  popupPlaceForm, popupProfileForm,popupProfileName, popupProfileDescripton,
+  newPlaceButton, placeCards,
+  profileEditButton,profileName, profileDescripton,
+  popupAvatarForm, profileAvatar, profileAvatarLink, profileAvatarEditButton
+}
+  from '../utils/constants.js'
+
 import {Card} from '../components/Card.js'
 import {FormValidator} from '../components/FormValidator.js'
 import {Section} from '../components/Section.js'
@@ -10,45 +21,6 @@ import {Api} from '../components/Api.js'
 
 import '../pages/index.css'
 
-//ПЕРЕМЕННЫЕ
-//валидация
-const validationConfig = {
-  formSelector: 'form',
-  inputSelector: 'form__input',
-  submitButtonSelector: 'form__submit-button',
-  inactiveButtonClass: 'form__submit-button_disabled',
-  errorClass: 'form__input_disabled'
-}
-
-// попапы
-const popupPlace = document.querySelector('.popup_place');
-const popupProfile = document.querySelector('.popup_profile');
-const popupPhoto = document.querySelector('.popup_photo');
-const popupDelete = document.querySelector('.popup_delete-confirm');
-const popupAvatarEdit = document.querySelector('.popup_update-avatar');
-
-// формы
-const popupPlaceForm = document.forms ['placeForm'];
-const popupProfileForm = document.forms ['profileForm'];
-const popupProfileName = popupProfileForm.querySelector('.profile-form__input_type_name');
-const popupProfileDescripton = popupProfileForm.querySelector('.profile-form__input_type_descripton');
-
-// место
-const newPlaceButton = document.querySelector('.profile__add-button');
-const placeCards = document.querySelector('.places');
-
-// профиль
-const profileEditButton = document.querySelector('.profile__edit-button');
-const profileName = document.querySelector('.profile__name');
-const profileDescripton = document.querySelector('.profile__description'); 
-
-//аватар
-const popupAvatarForm = document.forms ['avatarForm'];
-const profileAvatar = document.querySelector('.profile__avatar-wrap');
-const profileAvatarLink =  document.querySelector('.profile__avatar');
-const profileAvatarEditButton = document.querySelector('.profile__avatar-edit');
-
-// ФУНКЦИИ 
 
 //валидация
 const popupPlaceFormValid = new FormValidator (validationConfig, popupPlaceForm)
@@ -131,11 +103,11 @@ function handlePlaceFormSubmit (card) {
   .then(function (values) {
     const cards = values[0];
     const user = values [1];
-    newPlaceCard.renderItem([cards],user)
+    newPlaceCard.renderItem([cards],user);
+    popupPlaceAdd.closePopup();
   })
   .catch((err)=>console.log (`catch:${err}`))
   .finally(() => {popupPlaceAdd.renderLoading(false)})
-  popupPlaceAdd.closePopup();
 }
 
 //удаление карточки
@@ -145,9 +117,11 @@ popupDeleteAdd.setEventListeners ();
 function handleDeleteCard (card) {
   popupDeleteAdd.openPopup();
   popupDeleteAdd.setSubmitAction (() => {
+    console.log (card);
     api.deleteCard (card._cardId);
     this._placeCard.remove();
     this._placeCard = null;
+    popupDeleteAdd.closePopup();
   })
 } 
 
@@ -178,11 +152,12 @@ function showPopupProfile () {
 }
 
 function handleProfileFormSubmit (data) {
-  userInfo.updateUserInfo(data);
   popupProfileAdd.renderLoading(true);
-  api.upadateUserInfo (data)
+  api.upadateUserInfo (data).then (()=> {
+    popupProfileAdd.closePopup();
+    userInfo.updateUserInfo(data);
+  })
   .finally(()=>{popupProfileAdd.renderLoading(false)});
-  popupProfileAdd.closePopup();
 }
 // end - редактирование профиля
 
@@ -197,10 +172,11 @@ function showPopupAvatar () {
 
 function handleAvatarEdit (linkObj) {
   popupAvatarEditAdd.renderLoading (true);
-  api.changeAvatar (linkObj.avatarImageLink)
+  api.changeAvatar (linkObj.avatarImageLink).then (()=> {
+    popupAvatarEditAdd.closePopup();
+    userInfo.updateUserAvatar (linkObj.avatarImageLink);
+  })
   .finally(() => {popupAvatarEditAdd.renderLoading(false)});
-  userInfo.updateUserAvatar (linkObj.avatarImageLink);
-  popupAvatarEditAdd.closePopup();
 }
 // end - редактирование аватара
 

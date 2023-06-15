@@ -39,6 +39,7 @@ export class Card {
   updateLikes (likes) {
     this._likes.textContent = likes.length;
     this._likesArr = likes;
+    this._placeCardLikeBtn.classList.toggle('place__like_active');
   }
 
   // создание элемента для карточки места
@@ -82,7 +83,6 @@ _addEventListenerForCard () {
 }
 
 _toggleLike () {
-  this._placeCardLikeBtn.classList.toggle('place__like_active');
   this._handleCardLike (this._cardId,this._likeStatus ());
 }
 

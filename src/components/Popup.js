@@ -21,14 +21,6 @@ export class Popup {
     this._popup.addEventListener('click', this._closePopupByOvelayClick);
   }
 
-  renderLoading (isLoading) {
-    if (isLoading) {
-      this._submitButton.textContent = 'Сохранение...'
-    } else {
-      this._submitButton.textContent = 'Сохранить'
-    }
-  }
-
   _handleEscClose (evt) {
     if (evt.key === 'Escape') {
       this.closePopup();
