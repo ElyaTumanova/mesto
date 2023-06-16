@@ -117,11 +117,13 @@ popupDeleteAdd.setEventListeners ();
 function handleDeleteCard (card) {
   popupDeleteAdd.openPopup();
   popupDeleteAdd.setSubmitAction (() => {
-    console.log (card);
-    api.deleteCard (card._cardId);
-    this._placeCard.remove();
-    this._placeCard = null;
-    popupDeleteAdd.closePopup();
+    api.deleteCard (card._cardId)
+    .then (() => {
+      this._placeCard.remove();
+      this._placeCard = null;
+      popupDeleteAdd.closePopup();
+    })
+    .catch((err)=>console.log (`catch:${err}`));
   })
 } 
 
@@ -153,10 +155,12 @@ function showPopupProfile () {
 
 function handleProfileFormSubmit (data) {
   popupProfileAdd.renderLoading(true);
-  api.upadateUserInfo (data).then (()=> {
+  api.upadateUserInfo (data)
+  .then (()=> {
     popupProfileAdd.closePopup();
     userInfo.updateUserInfo(data);
   })
+  .catch((err)=>console.log (`catch:${err}`))
   .finally(()=>{popupProfileAdd.renderLoading(false)});
 }
 // end - редактирование профиля
@@ -172,10 +176,12 @@ function showPopupAvatar () {
 
 function handleAvatarEdit (linkObj) {
   popupAvatarEditAdd.renderLoading (true);
-  api.changeAvatar (linkObj.avatarImageLink).then (()=> {
+  api.changeAvatar (linkObj.avatarImageLink)
+  .then (()=> {
     popupAvatarEditAdd.closePopup();
     userInfo.updateUserAvatar (linkObj.avatarImageLink);
   })
+  .catch((err)=>console.log (`catch:${err}`))
   .finally(() => {popupAvatarEditAdd.renderLoading(false)});
 }
 // end - редактирование аватара
